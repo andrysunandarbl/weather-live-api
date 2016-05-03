@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-http="http://www.springframework.org/schema/integration/http"
+       xmlns:int-xml="http://www.springframework.org/schema/oxm"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd">
+
+    <int:channel id="weatherinfotrigger" />
+    <int:channel id="weatherinfo" />
+    
+    <int:inbound-channel-adapter channel="weatherinfotrigger" expression="''">
+        <int:poller fixed-delay="10000"> </int:poller>        
+    </int:inbound-channel-adapter>
+    
+    <int-http:outbound-gateway id="weatherHttpGateway"
+                               request-channel="weatherinfotrigger"
+                               url="http://api.openweathermap.org/data/2.5/weather?q=Jakarta,id&amp;mode=xml&amp;appid=7beded91e25f1da9654cf7ee862fc84f"
+                               http-method="GET"
+                               expected-response-type="java.lang.String"
+                               charset="UTF-8"
+                               reply-channel="weatherinfo">
+    </int-http:outbound-gateway>
+    
+    <int:logging-channel-adapter id="weatherinfo" level="INFO" />
+        
+    <int-xml:
+        
+</beans>
